@@ -5,23 +5,12 @@ const packageData = require("../package.json");
 module.exports = function(env) {
     let plugins = [];
     let output = {
-        path: path.resolve(__dirname, "../dist"),
-        filename: `${packageData.name}.js`,
-        libraryTarget: 'umd',
-        library: 'SET THIS' //this will be the global variable to hook into
+        path: path.resolve(__dirname, "../tests"),
+        filename: `${packageData.name}_tests.js`,
     };
 
-    if (env === "prod") {
-        let UglifyJsPlugin = new webpack.optimize.UglifyJsPlugin();
-        let prodTrigger = new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify('production')
-        });
-        output.filename = `${packageData.name}.min.js`;
-        plugins.push(prodTrigger, UglifyJsPlugin);
-    }
-
     return {
-        entry: "./src/library.js",
+        entry: './tests/project_tests.js',
         output: output,
         module:{
             rules:[
@@ -43,13 +32,9 @@ module.exports = function(env) {
         },
         plugins: plugins,
         externals: {
-            "js-xlsx": {
-                commonjs: 'js-xlsx',
-                commonjs2: 'js-xlsx',
-                amd: 'js-xlsx',
-                root: 'XLSX'
-            }
-        }
+            "js-xlsx": 'XLSX',
+            "jsZip": "JSZip"
+        },
         //devtool: 'source-map'
     };
 }
